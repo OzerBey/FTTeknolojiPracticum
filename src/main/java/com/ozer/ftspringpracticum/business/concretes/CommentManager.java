@@ -5,11 +5,13 @@ import com.ozer.ftspringpracticum.business.abstracts.SequenceGeneratorService;
 import com.ozer.ftspringpracticum.core.utilities.results.*;
 import com.ozer.ftspringpracticum.dataAccess.CommentDao;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
-import com.ozer.ftspringpracticum.entities.concretes.User;
+import com.ozer.ftspringpracticum.entities.concretes.Product;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +65,7 @@ public class CommentManager implements CommentService {
                 arrList.add(item.getComment());
             }
         });
-        return new SuccessDataResult<>(arrList, "Commnents listed");
+        return new SuccessDataResult<>(arrList, "Comments listed");
     }
 
     public DataResult<List<String>> getByUserId(Long userId) {
@@ -77,17 +79,13 @@ public class CommentManager implements CommentService {
         return new SuccessDataResult<>(arrList, "Comments listed");
     }
 
-    //! Verilen tarih aralıklarında belirli bir ürüne yapılmış olan yorumları gösteren bir metot yazınız.
-
     @Override
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(Date startDate, Date endDate) {
+    public DataResult<List<Comment>> getAllCommentsBetweenDate(LocalDate startDate, LocalDate endDate, Product product) {
         List tempComments = new ArrayList();
         getAll().getData().forEach((comment -> {
-            if (comment.getCommentDate().compareTo(startDate) > 0 && comment.getCommentDate().compareTo(endDate) < 0) {
-                tempComments.add(comment.getComment());
-            }
+            System.err.println(comment);
+
         }));
-        System.err.println(tempComments);
         return new SuccessDataResult<>(tempComments, "Comments listed");
     }
 

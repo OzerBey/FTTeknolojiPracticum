@@ -3,14 +3,15 @@ package com.ozer.ftspringpracticum.api.controllers;
 import com.ozer.ftspringpracticum.business.abstracts.CommentService;
 import com.ozer.ftspringpracticum.core.utilities.results.*;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
+import com.ozer.ftspringpracticum.entities.concretes.Product;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @RestController
-@Log4j2
 @RequestMapping("/api/comments")
 public class CommentsController {
 
@@ -37,9 +38,8 @@ public class CommentsController {
     }
 
     @GetMapping("getAllCommentsBetweenDate")
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(@RequestParam(value = "startDate") Date startDate, @RequestParam(value = "endDate") Date endDate) {
-        log.warn("haha");
-        return this.commentService.getAllCommentsBetweenDate(startDate, endDate);
+    public DataResult<List<Comment>> getAllCommentsBetweenDate(@RequestParam(value = "startDate") LocalDate startDate, @RequestParam(value = "endDate") LocalDate endDate, @RequestBody Product product) {
+        return this.commentService.getAllCommentsBetweenDate(startDate, endDate, product);
     }
 
     @GetMapping("getAll")
