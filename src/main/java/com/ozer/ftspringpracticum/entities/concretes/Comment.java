@@ -30,7 +30,6 @@ public class Comment {
     private String comment;
 
     @Field("comment_date")
-    @NotNull
     private Date commentDate;
 
     @Field("product_id")
