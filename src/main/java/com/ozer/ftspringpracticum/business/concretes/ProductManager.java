@@ -8,9 +8,7 @@ import com.ozer.ftspringpracticum.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,11 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result deleteById(Long id) {
-        return null;
+        if (getById(id) != null) {
+            this.productDao.deleteById(id);
+            return new SuccessResult("Product deleted successfully");
+        }
+        return new ErrorResult("Product deleting failed");
     }
 
     @Override
@@ -48,33 +50,39 @@ public class ProductManager implements ProductService {
 
     @Override
     public DataResult<Optional<Product>> getById(Long productId) {
-        return new SuccessDataResult<>(this.productDao.findById(productId), "Product listed");
+        return new SuccessDataResult<>(this.productDao.findById(productId), "Product by their id listed");
     }
 
     @Override
     public DataResult<List<Product>> getByExpiredDate() {
         List<Product> list = new ArrayList<>();
-        getAll().getData().forEach((product -> {
-            boolean isExpired = java.time.LocalDate.now().isAfter(product.getExpirationDate());
-            if (isExpired) {
-                list.add(product);
-                System.err.println(product.getExpirationDate());
+        for (int i = 0; i < getAll().getData().size(); i++) {
+            Product tempProduct = getAll().getData().get(i);
+            if (tempProduct.getExpirationDate() != null) {
+                boolean isExpired = java.time.LocalDate.now().isAfter(tempProduct.getExpirationDate());
+                if (isExpired) {
+                    list.add(tempProduct);
+                }
             }
-        }));
-        return new SuccessDataResult<List<Product>>(list, "Prodcuts listed");
+        }
+        return new SuccessDataResult<List<Product>>(list, "Expired products are listed.");
     }
 
     @Override
     public DataResult<List<Product>> getByNotExpiredDate() {
         List<Product> list = new ArrayList<>();
-        getAll().getData().forEach((product) -> {
-            list.add(product);
-            boolean isExpired = java.time.LocalDate.now().isAfter(product.getExpirationDate());
-            if (!isExpired) {
-                list.add(product);
+        for (int i = 0; i < getAll().getData().size(); i++) {
+            Product tempProduct = getAll().getData().get(i);
+            if (tempProduct.getExpirationDate() == null) {
+                list.add(tempProduct);
+            } else {
+                boolean isExpired = java.time.LocalDate.now().isAfter(tempProduct.getExpirationDate());
+                if (!isExpired) {
+                    list.add(tempProduct);
+                }
             }
-        });
-        return new SuccessDataResult<List<Product>>(list, "Products listed");
+        }
+        return new SuccessDataResult<List<Product>>(list, "Products that have not expired are listed.");
     }
 
     @Override

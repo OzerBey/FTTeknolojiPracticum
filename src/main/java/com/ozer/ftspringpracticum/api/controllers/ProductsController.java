@@ -29,6 +29,11 @@ public class ProductsController {
         return this.productService.getById(id);
     }
 
+    @DeleteMapping("deleteById")
+    public Result deleteById(@RequestParam Long id) {
+        return this.productService.deleteById(id);
+    }
+
     @GetMapping("getByExpiredDate")
     public DataResult<List<Product>> getByExpiredDate() {
         return this.productService.getByExpiredDate();
