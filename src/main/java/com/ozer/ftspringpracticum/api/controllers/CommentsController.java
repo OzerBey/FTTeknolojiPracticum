@@ -44,8 +44,13 @@ public class CommentsController {
     }
 
     @GetMapping("getAllCommentsBetweenDate")
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate, @RequestParam("productId") Long productId) {
+    public DataResult<List<String>> getAllCommentsBetweenDate(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate, @RequestParam("productId") Long productId) {
         return this.commentService.getAllCommentsBetweenDate(startDate, endDate, productId);
+    }
+
+    @GetMapping("getAllCommentsBetweenDateByUser")
+    public DataResult<List<String>> getAllCommentsBetweenDateByUser(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate, @RequestParam("userId") Long userId) {
+        return this.commentService.getAllCommentsBetweenDateByUser(startDate, endDate, userId);
     }
 
     @GetMapping("getAll")

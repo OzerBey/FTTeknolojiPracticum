@@ -4,6 +4,7 @@ import com.ozer.ftspringpracticum.core.utilities.results.DataResult;
 import com.ozer.ftspringpracticum.core.utilities.results.Result;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
 import com.ozer.ftspringpracticum.entities.concretes.Product;
+import com.ozer.ftspringpracticum.entities.concretes.User;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -23,7 +24,9 @@ public interface CommentService {
 
     DataResult<List<String>> getByUserId(Long productId);
 
-    DataResult<List<Comment>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId);
+    DataResult<List<String>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId);
+
+    DataResult<List<String>> getAllCommentsBetweenDateByUser(String startDate, String endDate, Long userId);
 
     DataResult<List<Comment>> getAll();
 }

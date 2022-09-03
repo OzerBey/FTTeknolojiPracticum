@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,15 +88,33 @@ public class CommentManager implements CommentService {
     }
 
     @Override
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId) {
-        List<Comment> commentsList = new ArrayList();
+    public DataResult<List<String>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId) {
+        List<String> commentsList = new ArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate parseStartDate = LocalDate.parse(startDate, formatter);
+        LocalDate parseEndDate = LocalDate.parse(endDate, formatter);
         for (int i = 0; i < getAll().getData().size(); i++) {
             Comment comment = getAll().getData().get(i);
-            // add get method range date
-            commentsList.add(comment);
-            System.err.println("comment : " + comment.getComment());
+            if (comment.getCommentDate().compareTo(parseStartDate) > 0 && comment.getCommentDate().compareTo(parseEndDate) < 0 && comment.getProductId() == productId) {
+                commentsList.add(comment.getComment());
+            }
         }
         return new SuccessDataResult<>(commentsList, "Comments listed");
+    }
+
+    @Override
+    public DataResult<List<String>> getAllCommentsBetweenDateByUser(String startDate, String endDate, Long userId) {
+        List<String> commentsByUserList = new ArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate parseStartDate = LocalDate.parse(startDate, formatter);
+        LocalDate parseEndDate = LocalDate.parse(endDate, formatter);
+        for (int i = 0; i < getAll().getData().size(); i++) {
+            Comment comment = getAll().getData().get(i);
+            if (comment.getCommentDate().compareTo(parseStartDate) > 0 && comment.getCommentDate().compareTo(parseEndDate) < 0 && comment.getUserId() == userId) {
+                commentsByUserList.add(comment.getComment());
+            }
+        }
+        return new SuccessDataResult<>(commentsByUserList, "Comments listed");
     }
 
     @Override
