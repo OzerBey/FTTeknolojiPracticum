@@ -15,8 +15,8 @@ import java.util.Optional;
 @Service
 public class ProductManager implements ProductService {
 
-    private ProductDao productDao;
-    private SequenceGeneratorService sequenceGeneratorService;
+    private final ProductDao productDao;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
     public ProductManager(ProductDao productDao, SequenceGeneratorService sequenceGeneratorService) {
@@ -26,8 +26,8 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result add(Product product) {
-        product.setId((long) sequenceGeneratorService.getSequenceNumber(product.SEQUENCE_NAME));
-        if (!product.equals(null)) {
+        product.setId((long) sequenceGeneratorService.getSequenceNumber(Product.SEQUENCE_NAME));
+        if (product != null) {
             this.productDao.insert(product);
             return new SuccessResult("Product added successfully");
         }
@@ -45,11 +45,19 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result update(Product product) {
-        return null;
+        Optional<Product> getProduct = productDao.findById(product.getId());
+        if (getProduct.isEmpty()) {
+            return new ErrorResult("Product id not found !!");
+        }
+        this.productDao.save(product);
+
+        return new SuccessResult("Product updated");
     }
 
     @Override
     public DataResult<Optional<Product>> getById(Long productId) {
+        Optional<Product> getProduct = productDao.findById(productId);
+        if (getProduct.isEmpty()) return new ErrorDataResult<>("Product id not found !!");
         return new SuccessDataResult<>(this.productDao.findById(productId), "Product by their id listed");
     }
 
@@ -65,7 +73,7 @@ public class ProductManager implements ProductService {
                 }
             }
         }
-        return new SuccessDataResult<List<Product>>(list, "Expired products are listed.");
+        return new SuccessDataResult<>(list, "Expired products are listed.");
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ProductManager implements ProductService {
                 }
             }
         }
-        return new SuccessDataResult<List<Product>>(list, "Products that have not expired are listed.");
+        return new SuccessDataResult<>(list, "Products that have not expired are listed.");
     }
 
     @Override

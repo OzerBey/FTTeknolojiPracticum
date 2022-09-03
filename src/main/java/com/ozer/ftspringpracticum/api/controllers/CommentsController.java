@@ -5,6 +5,7 @@ import com.ozer.ftspringpracticum.core.utilities.results.*;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
 import com.ozer.ftspringpracticum.entities.concretes.Product;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,12 +25,17 @@ public class CommentsController {
     @PostMapping("add")
     public Result add(@RequestBody Comment comment) {
         this.commentService.add(comment);
-        return new SuccessResult("Commnets added successfully");
+        return new SuccessResult("Comment added successfully");
     }
 
     @GetMapping("getByProductId")
     public DataResult<List<String>> getByProductId(@RequestParam(name = "id") Long id) {
         return this.commentService.getByProductId(id);
+    }
+
+    @DeleteMapping("delete")
+    public Result delete(@RequestParam("commentId") Long commentId) {
+        return this.commentService.deleteById(commentId);
     }
 
     @GetMapping("getByUserId")
@@ -38,8 +44,8 @@ public class CommentsController {
     }
 
     @GetMapping("getAllCommentsBetweenDate")
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(@RequestParam(value = "startDate") LocalDate startDate, @RequestParam(value = "endDate") LocalDate endDate, @RequestBody Product product) {
-        return this.commentService.getAllCommentsBetweenDate(startDate, endDate, product);
+    public DataResult<List<Comment>> getAllCommentsBetweenDate(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate, @RequestParam("productId") Long productId) {
+        return this.commentService.getAllCommentsBetweenDate(startDate, endDate, productId);
     }
 
     @GetMapping("getAll")

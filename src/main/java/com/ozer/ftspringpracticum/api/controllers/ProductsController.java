@@ -34,6 +34,11 @@ public class ProductsController {
         return this.productService.deleteById(id);
     }
 
+    @PostMapping("update")
+    public Result update(@RequestBody Product product) {
+        return this.productService.update(product);
+    }
+
     @GetMapping("getByExpiredDate")
     public DataResult<List<Product>> getByExpiredDate() {
         return this.productService.getByExpiredDate();

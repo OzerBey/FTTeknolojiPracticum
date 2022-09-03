@@ -23,7 +23,7 @@ public interface CommentService {
 
     DataResult<List<String>> getByUserId(Long productId);
 
-    DataResult<List<Comment>> getAllCommentsBetweenDate(LocalDate startDate, LocalDate endDate, Product product);
+    DataResult<List<Comment>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId);
 
     DataResult<List<Comment>> getAll();
 }

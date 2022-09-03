@@ -5,15 +5,11 @@ import com.ozer.ftspringpracticum.business.abstracts.SequenceGeneratorService;
 import com.ozer.ftspringpracticum.core.utilities.results.*;
 import com.ozer.ftspringpracticum.dataAccess.CommentDao;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
-import com.ozer.ftspringpracticum.entities.concretes.Product;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +17,7 @@ import java.util.Optional;
 @Log4j2
 public class CommentManager implements CommentService {
 
-    private CommentDao commentDao;
+    private final CommentDao commentDao;
     private SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
@@ -39,12 +35,22 @@ public class CommentManager implements CommentService {
 
     @Override
     public Result deleteById(Long id) {
-        return null;
+        if (getById(id) != null) {
+            this.commentDao.deleteById(id);
+            return new SuccessResult("Comment deleted successfully");
+        }
+        return new ErrorResult("Comment deleting failed");
     }
 
     @Override
     public Result update(Comment comment) {
-        return null;
+        Optional<Comment> getComment = commentDao.findById(comment.getId());
+        if (!getComment.isPresent()) {
+            return new ErrorResult("Comment id not found !!");
+        }
+        this.commentDao.save(comment);
+
+        return new SuccessResult("Comment updated");
     }
 
     @Override
@@ -80,18 +86,19 @@ public class CommentManager implements CommentService {
     }
 
     @Override
-    public DataResult<List<Comment>> getAllCommentsBetweenDate(LocalDate startDate, LocalDate endDate, Product product) {
-        List tempComments = new ArrayList();
-        getAll().getData().forEach((comment -> {
-            System.err.println(comment);
-
-        }));
-        return new SuccessDataResult<>(tempComments, "Comments listed");
+    public DataResult<List<Comment>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId) {
+        List<Comment> commentsList = new ArrayList();
+        for (int i = 0; i < getAll().getData().size(); i++) {
+            Comment comment = getAll().getData().get(i);
+            // add get method range date
+            commentsList.add(comment);
+            System.err.println("comment : " + comment.getComment());
+        }
+        return new SuccessDataResult<>(commentsList, "Comments listed");
     }
 
     @Override
     public DataResult<List<Comment>> getAll() {
-        log.warn("All comments listed");
         return new SuccessDataResult<>(this.commentDao.findAll(), "All of comments listed");
     }
 }
