@@ -17,8 +17,8 @@ import java.util.Optional;
 @Log4j2
 public class UserManager implements UserService {
 
-    private UserDao userDao;
-    private SequenceGeneratorService sequenceGeneratorService;
+    private final UserDao userDao;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
     public UserManager(UserDao userDao, SequenceGeneratorService sequenceGeneratorService) {
@@ -29,13 +29,13 @@ public class UserManager implements UserService {
 
     @Override
     public Result add(User user) {
-        user.setId((long) sequenceGeneratorService.getSequenceNumber(user.SEQUENCE_NAME));
+        user.setId((long) sequenceGeneratorService.getSequenceNumber(User.SEQUENCE_NAME));
         this.userDao.save(user);
         return new SuccessResult("User added successfully");
     }
 
     @Override
-    public Result deleteById(Long id) throws UserNotFoundException {
+    public Result deleteById(Long id) {
         if (this.userDao.existsById(id)) {
             this.userDao.deleteById(id);
             return new SuccessResult("User deleted by their id successfully");

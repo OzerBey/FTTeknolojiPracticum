@@ -4,5 +4,8 @@ spring:
       database: FtTeknoloji
       port: '27017'
       host: localhost
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
 server:
   port: '9090'

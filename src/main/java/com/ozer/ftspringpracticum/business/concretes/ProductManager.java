@@ -27,11 +27,8 @@ public class ProductManager implements ProductService {
     @Override
     public Result add(Product product) {
         product.setId((long) sequenceGeneratorService.getSequenceNumber(Product.SEQUENCE_NAME));
-        if (product != null) {
-            this.productDao.insert(product);
-            return new SuccessResult("Product added successfully");
-        }
-        return new ErrorResult("Product don't add to db");
+        this.productDao.insert(product);
+        return new SuccessResult("Product added successfully");
     }
 
     @Override

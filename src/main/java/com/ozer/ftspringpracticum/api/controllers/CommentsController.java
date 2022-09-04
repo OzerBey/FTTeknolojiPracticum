@@ -3,13 +3,8 @@ package com.ozer.ftspringpracticum.api.controllers;
 import com.ozer.ftspringpracticum.business.abstracts.CommentService;
 import com.ozer.ftspringpracticum.core.utilities.results.*;
 import com.ozer.ftspringpracticum.entities.concretes.Comment;
-import com.ozer.ftspringpracticum.entities.concretes.Product;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController

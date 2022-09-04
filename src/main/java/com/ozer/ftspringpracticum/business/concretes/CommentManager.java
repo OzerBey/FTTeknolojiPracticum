@@ -20,7 +20,7 @@ import java.util.Optional;
 public class CommentManager implements CommentService {
 
     private final CommentDao commentDao;
-    private SequenceGeneratorService sequenceGeneratorService;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
     public CommentManager(CommentDao commentDao, SequenceGeneratorService sequenceGeneratorService) {
@@ -30,7 +30,7 @@ public class CommentManager implements CommentService {
 
     @Override
     public Result add(Comment comment) {
-        comment.setId((long) sequenceGeneratorService.getSequenceNumber(comment.SEQUENCE_NAME));
+        comment.setId((long) sequenceGeneratorService.getSequenceNumber(Comment.SEQUENCE_NAME));
         this.commentDao.save(comment);
         return new SuccessResult("Comment added successfully");
     }
@@ -47,7 +47,7 @@ public class CommentManager implements CommentService {
     @Override
     public Result update(Comment comment) {
         Optional<Comment> getComment = commentDao.findById(comment.getId());
-        if (!getComment.isPresent()) {
+        if (getComment.isEmpty()) {
             return new ErrorResult("Comment id not found !!");
         }
         this.commentDao.save(comment);
@@ -69,7 +69,6 @@ public class CommentManager implements CommentService {
 
         getAll().getData().forEach((item) -> {
             if (item.getProductId() == productId) {
-                System.err.println(item.getComment());
                 arrList.add(item.getComment());
             }
         });
@@ -80,7 +79,6 @@ public class CommentManager implements CommentService {
         List<String> arrList = new ArrayList<>();
         getAll().getData().forEach((item) -> {
             if (item.getUserId() == userId) {
-                System.err.println(item.getComment());
                 arrList.add(item.getComment());
             }
         });
@@ -89,7 +87,7 @@ public class CommentManager implements CommentService {
 
     @Override
     public DataResult<List<String>> getAllCommentsBetweenDate(String startDate, String endDate, Long productId) {
-        List<String> commentsList = new ArrayList();
+        List<String> commentsList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parseStartDate = LocalDate.parse(startDate, formatter);
         LocalDate parseEndDate = LocalDate.parse(endDate, formatter);
@@ -104,7 +102,7 @@ public class CommentManager implements CommentService {
 
     @Override
     public DataResult<List<String>> getAllCommentsBetweenDateByUser(String startDate, String endDate, Long userId) {
-        List<String> commentsByUserList = new ArrayList();
+        List<String> commentsByUserList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parseStartDate = LocalDate.parse(startDate, formatter);
         LocalDate parseEndDate = LocalDate.parse(endDate, formatter);
