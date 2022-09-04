@@ -10,7 +10,6 @@
     - *Boot*
     - *MVC*
     - *Data*
-    - *Security*
     - *Rest*
 <hr>
 <details>
