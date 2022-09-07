@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/java-v17-green)
 ![](https://img.shields.io/badge/spring--boot-v2.7.2-green)
-![](https://img.shields.io/badge/swagger-v3.0.0-green)
+![](https://img.shields.io/badge/swagger-v3.0.0-red)
 ## *Spring Boot Project*
 - *Java 17*
 - *MongoDB*
